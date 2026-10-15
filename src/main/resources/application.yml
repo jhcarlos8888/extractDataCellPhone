@@ -1,0 +1,138 @@
+spring:
+  main:
+    # Herramienta de consola: sin servidor web ni puerto expuesto.
+    web-application-type: none
+    banner-mode: off
+
+extractdatacellphone:
+
+  # ---------------------------------------------------------------------
+  # ALCANCE 1: carpetas de usuario.
+  # Solo se desciende en estas carpetas de primer nivel. Lo demas del
+  # almacenamiento (caches de juegos, tiendas, procesos del sistema) queda fuera.
+  # Se pueden sustituir desde la linea de comandos con --carpetas=a,b
+  # ---------------------------------------------------------------------
+  carpetas-usuario:
+    - DCIM
+    - Pictures
+    - Movies
+    - Documents
+    - Download
+    - DownloadHelper
+    - Music
+    - Recordings
+    - Ringtones
+    - Alarms
+    - Audiobooks
+    - Notifications
+    - Podcasts
+
+  # ---------------------------------------------------------------------
+  # ALCANCE 2: aplicaciones de mensajeria.
+  # Dentro de Android solo se entra en media/<paquete>, data/<paquete> y
+  # obb/<paquete> si el paquete esta en esta lista. Sustituible con
+  # --mensajeria=paquete1,paquete2
+  # ---------------------------------------------------------------------
+  paquetes-mensajeria:
+    - com.whatsapp
+    - com.whatsapp.w4b
+    - org.telegram.messenger
+    - org.telegram.messenger.web
+    - org.telegram.messenger.beta
+    - com.facebook.orca
+    - org.thoughtcrime.securesms
+    - com.discord
+    - com.google.android.apps.messaging
+    - com.skype.raider
+    - com.zoom.us
+    - com.microsoft.teams
+
+  # Extensiones descartadas en TODAS partes.
+  extensiones-ignoradas:
+    - nomedia
+    - database_uuid
+    - bin
+    - log
+    - chck
+    - eab
+    - crypt14
+    - crypt12
+    - crypt11
+    - was
+    - db
+    - db-wal
+    - db-shm
+    - journal
+    - lock
+    - tmp
+    - temp
+    - ver
+    - hash
+    - json
+    - cache
+    - idx
+    - part
+
+  # Tipos multimedia cuyo MIME NO empieza por image/, video/ ni audio/.
+  # Detectado con archivos reales del celular: Tika clasifica las notas de voz
+  # .opus de WhatsApp como "application/ogg" y algunos .docx/.pptx como
+  # "application/x-tika-ooxml". Sin estas entradas se habrian descartado
+  # TODAS las notas de voz y TODOS los Word/PowerPoint.
+  mime-multimedia:
+    - application/ogg
+    - application/mp4
+    - application/x-tika-ooxml
+    - text/html
+
+  # Extensiones descartadas SOLO dentro de Android. Un .txt en Documents puede ser
+  # una nota del usuario y un .zip en Download algo que descargo; en una app son
+  # recursos internos. Lo mismo aplica a js/css/html: son paginas incrustadas en
+  # los visores web de las aplicaciones.
+  extensiones-ignoradas-en-apps:
+    - txt
+    - zip
+    - apk
+    - obb
+    - dex
+    - so
+    - arsc
+    - xml
+    - pb
+    - pbm
+    - js
+    - css
+    - htm
+    - html
+    - manifest
+    - batch
+    - jwt
+    - bizprofile
+    - thumbnail
+    - properties
+    - conf
+    - cfg
+    - ini
+
+  # Nombres de archivo basura SIN extension, como "patch_1.33.9_304_27".
+  # Se descartan aunque no tengan extension alguna.
+  patrones-nombre-ignorados:
+    - "(?i)^patch[_-].*"
+    - "(?i)^.*\\.patch$"
+    - "(?i)^.*\\.part\\d*$"
+
+  # Exclusiones adicionales por nombre de carpeta, ademas del alcance.
+  excluir-carpetas: []
+
+  # Deteccion de descargas por trozos incompletas (patron observado: 64 KiB).
+  detectar-truncados: true
+  bloque-truncado: 65536
+  max-tamano-truncado: 8388608
+  muestra-verificacion: 20
+  sobreescribir: false
+
+logging:
+  level:
+    root: WARN
+    com.extractdatacellphone: INFO
+  pattern:
+    console: "%d{HH:mm:ss} %-5level %msg%n"
